@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'http_utils.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({
+    required this.title,
+  });
 
   final String title;
 
