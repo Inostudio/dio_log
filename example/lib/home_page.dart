@@ -1,11 +1,12 @@
 import 'package:dio_log/dio_log.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'http_utils.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({
+    required this.title,
+  });
 
   final String title;
 
@@ -21,7 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    showDebugBtn(context);
+    showDebugBtn(context, btnColor: Colors.blue);
     controller.text = url;
   }
 

@@ -19,7 +19,7 @@ class _LogWidgetState extends State<LogWidget>
     new Tab(text: "response"),
   ];
 
-  PageController _pageController;
+  PageController? _pageController;
 
   int currentIndex = 0;
 
@@ -31,26 +31,22 @@ class _LogWidgetState extends State<LogWidget>
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _pageController!.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.netOptions.reqOptions.url,
-          style: TextStyle(
-            fontSize: 16.0,
-            color: Color(0xFF4a4a4a),
-          ),
+          widget.netOptions.reqOptions!.url!,
+          style: TextStyle(fontSize: 11),
         ),
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
-        centerTitle: true,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 1.0,
-        iconTheme: IconThemeData(color: Color(0xFF555555)),
+        iconTheme: theme.iconTheme,
       ),
       body: PageView.builder(
         controller: _pageController,
@@ -71,11 +67,11 @@ class _LogWidgetState extends State<LogWidget>
         onTap: _bottomTap,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.network_wifi), title: Text('request')),
+              icon: Icon(Icons.cloud_upload_outlined), label: 'Request'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.network_wifi), title: Text('response')),
+              icon: Icon(Icons.cloud_download_outlined), label: 'Response'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.network_wifi), title: Text('error')),
+              icon: Icon(Icons.error_outline), label: 'Error'),
         ],
       ),
     );
@@ -90,7 +86,7 @@ class _LogWidgetState extends State<LogWidget>
   }
 
   void _bottomTap(int value) {
-    _pageController.animateToPage(value,
+    _pageController!.animateToPage(value,
         duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 }

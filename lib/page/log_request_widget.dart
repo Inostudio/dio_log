@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:dio_log/bean/net_options.dart';
-import 'package:dio_log/utils/copy_clipboard.dart';
 import 'package:flutter/material.dart';
 
 import '../dio_log.dart';
@@ -18,10 +17,10 @@ class LogRequestWidget extends StatefulWidget {
 
 class _LogRequestWidgetState extends State<LogRequestWidget>
     with AutomaticKeepAliveClientMixin {
-  TextEditingController _urlController;
-  TextEditingController _cookieController;
-  TextEditingController _paramController;
-  TextEditingController _bodyController;
+  late TextEditingController _urlController;
+  late TextEditingController _cookieController;
+  late TextEditingController _paramController;
+  late TextEditingController _bodyController;
   bool reqFail = false;
   @override
   void initState() {
@@ -44,14 +43,14 @@ class _LogRequestWidgetState extends State<LogRequestWidget>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    var reqOpt = widget.netOptions.reqOptions;
+    var reqOpt = widget.netOptions.reqOptions!;
     var resOpt = widget.netOptions.resOptions;
 
     ///格式化请求时间
-    var requestTime = getTimeStr(reqOpt.requestTime);
+    var requestTime = getTimeStr(reqOpt.requestTime!);
 
     ///格式化返回时间
-    var responseTime = getTimeStr(resOpt?.responseTime ?? reqOpt.requestTime);
+    var responseTime = getTimeStr(resOpt?.responseTime ?? reqOpt.requestTime!);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
@@ -62,7 +61,7 @@ class _LogRequestWidgetState extends State<LogRequestWidget>
               'Tip: long press a key to copy the value to the clipboard',
               style: TextStyle(fontSize: 10, color: Colors.red),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 copyClipboard(
                     context,
@@ -86,6 +85,7 @@ class _LogRequestWidgetState extends State<LogRequestWidget>
     );
   }
 
+  ///构建json树的展示
   Widget _buildJsonView(key, json) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,13 +125,15 @@ class _LogRequestWidgetState extends State<LogRequestWidget>
   @override
   bool get wantKeepAlive => true;
 
-  Map formDataMap;
+  Map? formDataMap;
   Widget _buildParam(dynamic data) {
     if (data is Map) {
       return _buildJsonView('body', data);
     } else if (data is FormData) {
-      formDataMap = Map()..addEntries(data.fields)..addEntries(data.files);
-      return _getDefText('formdata:${map2Json(formDataMap)}');
+      formDataMap = Map()
+        ..addEntries(data.fields)
+        ..addEntries(data.files);
+      return _getDefText('formData:${map2Json(formDataMap)}');
     } else if (data is String) {
       try {
         var decodedMap = json.decode(data);
@@ -146,7 +148,7 @@ class _LogRequestWidgetState extends State<LogRequestWidget>
 
   String dataFormat(dynamic data) {
     if (data is FormData) {
-      return 'formdata:${map2Json(formDataMap)}';
+      return 'formData:${map2Json(formDataMap)}';
     } else {
       return 'body:${toJson(data)}';
     }
